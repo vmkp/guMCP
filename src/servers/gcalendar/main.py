@@ -210,11 +210,19 @@ def create_server(user_id, api_key=None):
                         },
                         "time_min": {
                             "type": "string",
-                            "description": "Start time of the time range (format: YYYY-MM-DD HH:MM or YYYY-MM-DD)",
+                            "description": "Lower bound (exclusive) for an event's end time to filter by. Must be an RFC3339 timestamp with mandatory time zone offset, for example, 2011-06-03T10:00:00-07:00, 2011-06-03T10:00:00Z. Milliseconds may be provided but are ignored.",
                         },
                         "time_max": {
                             "type": "string",
-                            "description": "End time of the time range (format: YYYY-MM-DD HH:MM or YYYY-MM-DD)",
+                            "description": "Upper bound (exclusive) for an event's start time to filter by. Must be an RFC3339 timestamp with mandatory time zone offset, for example, 2011-06-03T10:00:00-07:00, 2011-06-03T10:00:00Z. Milliseconds may be provided but are ignored.",
+                        },
+                        "time_zone": {
+                            "type": "string",
+                            "description": "Time zone used in the response. Optional. The default is the time zone of the calendar.",
+                        },
+                        "page_token": {
+                            "type": "string",
+                            "description": "Token specifying which result page to return. Optional",
                         },
                         "days": {
                             "type": "integer",
@@ -245,6 +253,14 @@ def create_server(user_id, api_key=None):
                             "type": "string",
                             "description": "Free text search terms to find events that match",
                         },
+                        "q": {
+                            "type": "string",
+                            "description": "Free text search terms to match against event summary, descriptions, attendee display name, attendee email, organizer display name, organizer email, location. Optional.",
+                        },
+                        "q": {
+                            "type": "string",
+                            "description": "Free text search terms to match against event summary, descriptions, attendee display name, attendee email, organizer display name, organizer email, location. Optional.",
+                        },
                     },
                 },
                 outputSchema={
@@ -270,11 +286,11 @@ def create_server(user_id, api_key=None):
                         "summary": {"type": "string", "description": "Event title"},
                         "start_datetime": {
                             "type": "string",
-                            "description": "Start date/time (format: YYYY-MM-DD HH:MM or YYYY-MM-DD)",
+                            "description": "Start date/time (format: YYYY-MM-DD HH:MM or YYYY-MM-DD) in ISO format",
                         },
                         "end_datetime": {
                             "type": "string",
-                            "description": "End date/time (format: YYYY-MM-DD HH:MM or YYYY-MM-DD)",
+                            "description": "End date/time (format: YYYY-MM-DD HH:MM or YYYY-MM-DD) in ISO format",
                         },
                         "description": {
                             "type": "string",
@@ -378,11 +394,11 @@ def create_server(user_id, api_key=None):
                         },
                         "start_datetime": {
                             "type": "string",
-                            "description": "New start date/time (format: YYYY-MM-DD HH:MM or YYYY-MM-DD) (optional)",
+                            "description": "New start date/time (format: YYYY-MM-DD HH:MM or YYYY-MM-DD) in ISO format (optional)",
                         },
                         "end_datetime": {
                             "type": "string",
-                            "description": "New end date/time (format: YYYY-MM-DD HH:MM or YYYY-MM-DD) (optional)",
+                            "description": "New end date/time (format: YYYY-MM-DD HH:MM or YYYY-MM-DD) in ISO format (optional)",
                         },
                         "description": {
                             "type": "string",

@@ -66,7 +66,48 @@ async def test_list_events_tool(client):
 
 
 @pytest.mark.asyncio
-async def test_create_event_tool(client):
+async def test_list_events_with_time_range(client):
+    """Test listing events specifically for next week"""
+    today = datetime.now()
+    days_until_next_monday = ((7 - today.weekday()) % 7 + 7)
+    next_week_start = (today + timedelta(days=days_until_next_monday)).strftime("%Y-%m-%d")
+    next_week_end = (today + timedelta(days=days_until_next_monday + 6)).strftime("%Y-%m-%d")
+    
+    response = await client.process_query(
+        f"Use the list_events tool to show me events for next week only, "
+        f"using time_min={next_week_start} and time_max={next_week_end}."
+        + "\n\nIf successful, start your response with 'Found these events:'"
+    )
+
+    assert response, "No response received when listing events with next week's date range"
+    assert "found" in response.lower(), f"Unexpected response format: {response}"
+
+    print("List events (next week):")
+    print(f"\t{response}")
+
+    print("✅ Successfully tested list_events tool with time range")
+
+@pytest.mark.asyncio
+async def test_list_events_with_query(client):
+    # First create an event to update
+    event_id = await test_create_event_tool(client)
+
+    """Test listing events specifically for a query"""
+    response = await client.process_query(
+        f"Use the list_events tool to show me events that have a title 'Test Meeting'"
+        + "\n\nIf successful, start your response with 'Found these events:'"
+    )
+
+    assert response, "No response received when listing events with next week's date range"
+    assert "found" in response.lower(), f"Unexpected response format: {response}"
+
+    print("List events (next week):")
+    print(f"\t{response}")
+
+    print("✅ Successfully tested list_events tool with query")
+
+@pytest.mark.asyncio
+async def test_create_event_tool(client, event_title="Test Meeting", time_string = "10:00 AM, ending at 11:00 AM"):
     """Test the create_event tool functionality"""
     global TEST_EVENT_ID
 
@@ -75,8 +116,8 @@ async def test_create_event_tool(client):
 
     # Create a simple event
     response = await client.process_query(
-        f"Use the create_event tool to create a meeting called 'Test Meeting' for tomorrow ({tomorrow}) at 10:00 AM, ending at 11:00 AM."
-        + "\n\nIf successful, start your response with 'Event created successfully and return the Event ID:'"
+        f"Use the create_event tool to create a meeting called '{event_title}' for tomorrow ({tomorrow}) at {time_string}"
+        + "\n\nIf successful, start your response with 'Event created successfully, Event ID: {event_id}\nEvent details: {event_details}'"
     )
 
     assert response, "No response received when creating an event"
